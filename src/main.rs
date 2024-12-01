@@ -2,6 +2,7 @@ use clap::Parser;
 use id3::frame::{Picture, PictureType};
 use id3::{Tag, TagLike};
 use regex::Regex;
+use std::borrow::Cow;
 use std::collections::{BTreeMap, HashMap};
 use std::error::Error;
 use std::fs::{read, rename};
@@ -123,56 +124,91 @@ fn main() -> Result<(), Box<dyn Error>> {
             },
         };
 
-        if let Some(artist) = &args.artist {
-            tag.set_artist(artist.as_str());
-            must_update = true
-        }
-        if let Some(album) = &args.album {
-            tag.set_album(album.as_str());
-            must_update = true
-        }
-        if let Some(year) = args.year {
-            tag.set_year(year);
-            must_update = true
-        }
-        if let Some(genre) = &args.genre {
-            tag.set_genre(genre);
-            must_update = true
-        }
-        if let Some(track) = args.track {
-            tag.set_track(track);
-            must_update = true
-        }
-        if let Some(track) = args.track_increment {
-            tag.set_track(track + idx);
-            idx += 1;
-            must_update = true
-        }
-        if let Some(track_regex) = &args.track_regex {
-            if let Ok(r) = Regex::new(&track_regex) {
-                if let Some(caps) = r.captures(&basename) {
-                    if let Some(cap) = caps.name("track") {
-                        if let Ok(n) = cap.as_str().parse::<u32>() {
-                            tag.set_track(n);
-                            must_update = true
-                        }
-                    }
-                }
+        match (args.year, tag.year()) {
+            (Some(want), Some(have)) if want == have => (),
+            (Some(want), _) => {
+                tag.set_year(want);
+                must_update = true;
             }
+            _ => (),
         }
 
-        if let Some(title) = &args.title {
-            tag.set_title(title)
-        }
-        if let Some(title_regex) = &args.title_regex {
-            if let Ok(r) = Regex::new(&title_regex) {
-                if let Some(caps) = r.captures(&basename) {
-                    if let Some(cap) = caps.name("title") {
-                        tag.set_title(format_to_title(cap.as_str()));
-                        must_update = true
-                    }
-                }
+        match (&args.artist, tag.artist()) {
+            (Some(want), Some(have)) if want == have => (),
+            (Some(want), _) => {
+                tag.set_artist(want.as_str());
+                must_update = true;
             }
+            _ => (),
+        }
+
+        match (&args.album, tag.album()) {
+            (Some(want), Some(have)) if want == have => (),
+            (Some(want), _) => {
+                tag.set_album(want.as_str());
+                must_update = true;
+            }
+            _ => (),
+        }
+
+        match (&args.genre, tag.genre()) {
+            (Some(want), Some(have)) if want == have => (),
+            (Some(want), _) => {
+                tag.set_genre(want.as_str());
+                must_update = true;
+            }
+            _ => (),
+        }
+
+        let some_want_track = if let Some(track) = args.track {
+            Some(track)
+        } else if let Some(track) = args.track_increment {
+            let track = track + idx;
+            idx = idx + 1;
+            Some(track)
+        } else if let Some(track_regex) = &args.track_regex {
+            match Regex::new(track_regex)
+                .map(|r| r.captures(&basename))?
+                .and_then(|caps| caps.name("track"))
+                .map(|m| m.as_str().parse::<u32>())
+            {
+                Some(Ok(track)) => Some(track),
+                _ => None,
+            }
+        } else {
+            None
+        };
+
+        match (some_want_track, tag.track()) {
+            (Some(want), Some(have)) if want == have => (),
+            (Some(want), _) => {
+                tag.set_track(want);
+                must_update = true;
+            }
+            _ => (),
+        }
+
+        let some_want_title = if let Some(title) = &args.title {
+            Some(Cow::Borrowed(title))
+        } else if let Some(title_regex) = &args.title_regex {
+            match Regex::new(title_regex)
+                .map(|r| r.captures(&basename))?
+                .and_then(|caps| caps.name("title"))
+            {
+                Some(m) => Some(Cow::Owned(format_to_title(m.as_str()))),
+                _ => None,
+            }
+        } else {
+            None
+        };
+
+        match (some_want_title, tag.title()) {
+            (Some(want), Some(have)) if want.as_str() == have => (),
+            (Some(want), _) => {
+                tag.set_title(want.as_str());
+                must_update = true;
+            }
+            _ => (),
         }
 
         if let Some(cover) = &args.cover {
@@ -181,13 +217,18 @@ fn main() -> Result<(), Box<dyn Error>> {
                 Err(err) => return Err(Box::new(err)),
             };
 
-            tag.add_frame(Picture {
+            let p = Picture {
                 data: b,
                 description: "".to_string(),
                 mime_type: "image/jpeg".to_string(),
                 picture_type: PictureType::CoverFront,
-            });
-            must_update = true
+            };
+
+            if !tag.pictures().any(|tp| p == *tp) {
+                tag.remove_all_pictures();
+                tag.add_frame(p);
+                must_update = true
+            }
         }
 
         if must_update {
@@ -230,7 +271,16 @@ fn main() -> Result<(), Box<dyn Error>> {
 
         let mut output = BTreeMap::new();
         tag.frames().for_each(|f| {
-            output.insert(f.id(), f.content().text().map_or("<bytes>", |x| x));
+            output.insert(
+                f.id(),
+                if let Some(p) = f.content().picture() {
+                    Cow::Owned(format!("<{} bytes>", p.data.len()))
+                } else if let Some(text) = f.content().text() {
+                    Cow::Borrowed(text)
+                } else {
+                    Cow::Borrowed("<bytes>")
+                },
+            );
         });
         println!("{} {:?}", new_file, output);
     }
