@@ -99,6 +99,9 @@ struct Cli {
     // /// Rename file format after applying tag
     // #[arg(long, default_value_t = String::from("{track:02} - {title}.mp3"))]
     // rename_format: String,
+    /// Extra cover from file and exit
+    #[arg(long)]
+    extract_cover: Option<String>,
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -123,6 +126,22 @@ fn main() -> Result<(), Box<dyn Error>> {
                 Err(err) => return Err(Box::new(err)),
             },
         };
+
+        if let Some(extract_to) = &args.extract_cover {
+            return match tag.pictures().next() {
+                Some(p) => match std::fs::write(extract_to, p.data.clone()) {
+                    Ok(_) => Ok(()),
+                    Err(err) => Err(Box::<dyn Error>::from(format!(
+                        "failed to write cover to '{}': {}",
+                        extract_to, err
+                    ))),
+                },
+                None => Err(Box::<dyn Error>::from(format!(
+                    "no image found in '{}'",
+                    file
+                ))),
+            };
+        }
 
         match (args.year, tag.year()) {
             (Some(want), Some(have)) if want == have => (),
