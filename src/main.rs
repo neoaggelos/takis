@@ -3,42 +3,35 @@ use id3::frame::{Picture, PictureType};
 use id3::{Tag, TagLike};
 use regex::Regex;
 use std::borrow::Cow;
-use std::collections::{BTreeMap, HashMap};
+use std::collections::BTreeMap;
 use std::error::Error;
 use std::fs::{read, rename};
 use std::path::Path;
 
 fn format_to_title(a: &str) -> String {
     fn next_char(ch: char, some_prev: Option<char>) -> char {
-        let mut this = ch;
-        let replacements = HashMap::from([
-            ('ά', 'α'),
-            ('έ', 'ε'),
-            ('ή', 'η'),
-            ('ί', 'ι'),
-            ('ό', 'ο'),
-            ('ύ', 'υ'),
-            ('ώ', 'ω'),
-            ('Ά', 'Α'),
-            ('Έ', 'Ε'),
-            ('Ή', 'Η'),
-            ('Ί', 'Ι'),
-            ('Ό', 'Ο'),
-            ('Ύ', 'Υ'),
-            ('Ώ', 'Ω'),
-        ]);
+        let this = match ch {
+            'ά' => 'α',
+            'έ' => 'ε',
+            'ή' => 'η',
+            'ί' => 'ι',
+            'ό' => 'ο',
+            'ύ' => 'υ',
+            'ώ' => 'ω',
+            'Ά' => 'Α',
+            'Έ' => 'Ε',
+            'Ή' => 'Η',
+            'Ί' => 'Ι',
+            'Ό' => 'Ο',
+            'Ύ' => 'Υ',
+            'Ώ' => 'Ω',
+            _ => ch,
+        };
 
-        if let Some(new) = replacements.get(&ch) {
-            this = *new
-        }
-
-        if let Some(prev) = some_prev {
-            if this.is_lowercase() && prev != '\'' && !prev.is_alphanumeric() {
-                this = this.to_ascii_uppercase()
-            }
-        }
-
-        return this;
+        return match some_prev.map(|prev| prev != '\'' && !prev.is_alphanumeric()) {
+            Some(false) => this,
+            _ => this.to_uppercase().next().unwrap_or(this),
+        };
     }
 
     let mut b = String::new();
