@@ -92,6 +92,10 @@ struct Cli {
     #[arg(long, group = "title-options")]
     title_regex: Option<String>,
 
+    /// Extra cover from file and exit
+    #[arg(long)]
+    extract_cover: Option<String>,
+
     /// Rename file after applying tag
     #[arg(long, default_value_t = false)]
     rename: bool,
@@ -99,9 +103,6 @@ struct Cli {
     // /// Rename file format after applying tag
     // #[arg(long, default_value_t = String::from("{track:02} - {title}.mp3"))]
     // rename_format: String,
-    /// Extra cover from file and exit
-    #[arg(long)]
-    extract_cover: Option<String>,
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
