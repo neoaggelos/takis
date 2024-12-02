@@ -233,7 +233,13 @@ fn main() -> Result<(), Box<dyn Error>> {
         if let Some(cover) = &args.cover {
             let b = match read(cover.as_str()) {
                 Ok(bytes) => bytes,
-                Err(err) => return Err(Box::new(err)),
+                Err(err) => {
+                    return Err(Box::<dyn Error>::from(format!(
+                        "failed to read cover '{}': {}",
+                        cover.as_str(),
+                        err
+                    )))
+                }
             };
 
             let p = Picture {
