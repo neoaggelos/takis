@@ -169,7 +169,12 @@ fn main() -> Result<(), Box<dyn Error>> {
                     kind: id3::ErrorKind::NoTag,
                     ..
                 }) => Tag::new(),
-                Err(err) => return Err(Box::new(err)),
+                Err(err) => {
+                    return Err(Box::<dyn Error>::from(format!(
+                        "failed to read tag in '{}': {}",
+                        file, err
+                    )))
+                }
             },
         };
 
