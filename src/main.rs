@@ -117,7 +117,8 @@ struct SongTag {
     cover: String,
     genre: String,
     file: String,
-    other: String,
+    #[tabled(format = "{:?}")]
+    other: Vec<String>,
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
