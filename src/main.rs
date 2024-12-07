@@ -180,7 +180,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         match (&args.artist, tag.artist()) {
             (Some(want), Some(have)) if !args.force && want == have => (),
             (Some(want), _) => {
-                tag.set_album_artist(want.as_str());
+                tag.set_artist(want.as_str());
                 must_update = true;
             }
             _ => (),
