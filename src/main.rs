@@ -29,6 +29,7 @@ fn format_to_title(a: &str) -> String {
             _ => ch,
         };
 
+        // NOTE: taking just the first (if any) uppercase or lowercase char is "good enough" for my needs
         return match some_prev.map(|p| p.is_alphanumeric() || p == '\'') {
             Some(true) => this.to_lowercase().next().unwrap_or(this),
             _ => this.to_uppercase().next().unwrap_or(this),
