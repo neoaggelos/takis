@@ -3,10 +3,11 @@ use id3::frame::{Picture, PictureType};
 use id3::{Tag, TagLike};
 use regex::Regex;
 use std::borrow::Cow;
-use std::collections::BTreeMap;
 use std::error::Error;
 use std::fs::{read, rename};
 use std::path::Path;
+use tabled::settings::Style;
+use tabled::{Table, Tabled};
 
 fn format_to_title(a: &str) -> String {
     fn next_char(ch: char, some_prev: Option<char>) -> char {
@@ -106,6 +107,19 @@ struct Cli {
     // rename_format: String,
 }
 
+#[derive(Tabled)]
+struct SongTag {
+    track: String,
+    title: String,
+    artist: String,
+    album: String,
+    year: String,
+    cover: String,
+    genre: String,
+    file: String,
+    other: String,
+}
+
 fn main() -> Result<(), Box<dyn Error>> {
     let args = Cli::parse();
 
@@ -127,6 +141,8 @@ fn main() -> Result<(), Box<dyn Error>> {
         },
         _ => None,
     };
+
+    let mut table = Vec::with_capacity(args.files.len());
 
     let mut idx: u32 = 0;
     for file in args.files {
@@ -310,21 +326,40 @@ fn main() -> Result<(), Box<dyn Error>> {
             };
         }
 
-        let mut output = BTreeMap::new();
-        tag.frames().for_each(|f| {
-            output.insert(
-                f.id(),
-                if let Some(p) = f.content().picture() {
-                    Cow::Owned(format!("<{} bytes>", p.data.len()))
-                } else if let Some(text) = f.content().text() {
-                    Cow::Borrowed(text)
-                } else {
-                    Cow::Borrowed("<bytes>")
-                },
-            );
+        table.push(SongTag {
+            file: new_file,
+            title: tag.title().unwrap_or_default().to_string(),
+            track: tag.track().map(|v| v.to_string()).unwrap_or_default(),
+            album: tag.album().unwrap_or_default().to_string(),
+            artist: tag.artist().unwrap_or_default().to_string(),
+            year: tag.year().map(|v| v.to_string()).unwrap_or_default(),
+            genre: tag.genre_parsed().unwrap_or_default().to_string(),
+            cover: tag
+                .pictures()
+                .next()
+                .map(|p| format!("<{} bytes>", p.data.len()))
+                .unwrap_or_default(),
+            other: tag
+                .frames()
+                .filter_map(|t| match t.id() {
+                    "APIC" => None,
+                    "TPE1" => None,
+                    "TPE2" => None,
+                    "TIT2" => None,
+                    "TCON" => None,
+                    "TYER" => None,
+                    "TALB" => None,
+                    "TRCK" => None,
+                    _ => Some(t.id().to_string()),
+                })
+                .collect(),
         });
-        println!("{} {:?}", new_file, output);
     }
+
+    println!(
+        "{}",
+        Table::new(table).with(Style::modern_rounded()).to_string()
+    );
 
     Ok(())
 }
