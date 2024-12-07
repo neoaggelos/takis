@@ -67,6 +67,10 @@ struct Cli {
     /// Set album cover
     #[arg(long)]
     cover: Option<String>,
+    #[arg(long, default_value = "")]
+    cover_description: String,
+    #[arg(long, default_value = "image/jpeg")]
+    cover_mime_type: String,
 
     /// Set track number.
     #[arg(long, group = "track-options")]
@@ -100,6 +104,25 @@ struct Cli {
 
 fn main() -> Result<(), Box<dyn Error>> {
     let args = Cli::parse();
+
+    let some_want_picture = match &args.cover {
+        Some(cover) => match read(cover.as_str()) {
+            Ok(bytes) => Some(Picture {
+                data: bytes,
+                description: args.cover_description,
+                mime_type: args.cover_mime_type,
+                picture_type: PictureType::CoverFront,
+            }),
+            Err(err) => {
+                return Err(Box::<dyn Error>::from(format!(
+                    "failed to read cover '{}': {}",
+                    cover.as_str(),
+                    err
+                )))
+            }
+        },
+        _ => None,
+    };
 
     let mut idx: u32 = 0;
     for file in args.files {
@@ -229,28 +252,10 @@ fn main() -> Result<(), Box<dyn Error>> {
             _ => (),
         }
 
-        if let Some(cover) = &args.cover {
-            let b = match read(cover.as_str()) {
-                Ok(bytes) => bytes,
-                Err(err) => {
-                    return Err(Box::<dyn Error>::from(format!(
-                        "failed to read cover '{}': {}",
-                        cover.as_str(),
-                        err
-                    )))
-                }
-            };
-
-            let p = Picture {
-                data: b,
-                description: "".to_string(),
-                mime_type: "image/jpeg".to_string(),
-                picture_type: PictureType::CoverFront,
-            };
-
-            if !tag.pictures().any(|tp| p == *tp) {
+        if let Some(want) = &some_want_picture {
+            if !tag.pictures().any(|tp| want == tp) {
                 tag.remove_all_pictures();
-                tag.add_frame(p);
+                tag.add_frame(want.clone());
                 must_update = true
             }
         }
