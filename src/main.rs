@@ -105,7 +105,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     for file in args.files {
         let path = Path::new(file.as_str());
 
-        let basename = path.file_name().unwrap().to_str().unwrap();
+        let basename = path
+            .file_name()
+            .map(|p| p.to_string_lossy())
+            .unwrap_or(Cow::Borrowed(&file));
+
         let basepath = path.parent().unwrap_or(Path::new("."));
 
         let mut must_update = args.clear;
