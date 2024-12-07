@@ -9,40 +9,7 @@ use std::path::Path;
 use tabled::settings::Style;
 use tabled::{Table, Tabled};
 
-fn format_to_title(a: &str) -> String {
-    fn next_char(ch: char, some_prev: Option<char>) -> char {
-        let this = match ch {
-            'ά' => 'α',
-            'έ' => 'ε',
-            'ή' => 'η',
-            'ί' => 'ι',
-            'ό' => 'ο',
-            'ύ' => 'υ',
-            'ώ' => 'ω',
-            'Ά' => 'Α',
-            'Έ' => 'Ε',
-            'Ή' => 'Η',
-            'Ί' => 'Ι',
-            'Ό' => 'Ο',
-            'Ύ' => 'Υ',
-            'Ώ' => 'Ω',
-            _ => ch,
-        };
-
-        // NOTE: taking just the first (if any) uppercase or lowercase char is "good enough" for my needs
-        return match some_prev.map(|p| p.is_alphanumeric() || p == '\'') {
-            Some(true) => this.to_lowercase().next().unwrap_or(this),
-            _ => this.to_uppercase().next().unwrap_or(this),
-        };
-    }
-
-    let mut b = String::new();
-    a.chars().for_each(|ch| {
-        b.push(next_char(ch, b.chars().last()));
-    });
-
-    b
-}
+use takis::format_to_title;
 
 #[derive(Parser, Debug)]
 struct Cli {
