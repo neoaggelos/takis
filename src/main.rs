@@ -220,8 +220,8 @@ fn main() -> Result<(), Box<dyn Error>> {
             _ => (),
         }
 
-        match (&args.genre, tag.genre()) {
-            (Some(want), Some(have)) if !args.force && want == have => (),
+        match (&args.genre, tag.genre_parsed()) {
+            (Some(want), Some(have)) if !args.force && want.as_str() == have => (),
             (Some(want), _) => {
                 tag.set_genre(want.as_str());
                 must_update = true;
