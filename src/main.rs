@@ -51,6 +51,9 @@ struct Cli {
     /// Clear existing tag
     #[arg(long, default_value_t = false)]
     clear: bool,
+    /// Clear existing frames by ID
+    #[arg(long)]
+    clear_id: Vec<String>,
 
     /// Force update tag
     #[arg(long, default_value_t = false)]
@@ -183,6 +186,15 @@ fn main() -> Result<(), Box<dyn Error>> {
                     file
                 ))),
             };
+        }
+
+        if args
+            .clear_id
+            .iter()
+            .map(|id| tag.remove(id))
+            .any(|p| p.len() != 0)
+        {
+            must_update = true;
         }
 
         match (args.year, tag.year()) {
