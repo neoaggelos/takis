@@ -51,6 +51,10 @@ struct Cli {
     #[arg(long, default_value_t = false)]
     clear: bool,
 
+    /// Force update tag
+    #[arg(long, default_value_t = false)]
+    force: bool,
+
     /// Set album name
     #[arg(long)]
     album: Option<String>,
@@ -165,7 +169,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
 
         match (args.year, tag.year()) {
-            (Some(want), Some(have)) if want == have => (),
+            (Some(want), Some(have)) if !args.force && want == have => (),
             (Some(want), _) => {
                 tag.set_year(want);
                 must_update = true;
@@ -174,9 +178,17 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
 
         match (&args.artist, tag.artist()) {
-            (Some(want), Some(have)) if want == have => (),
+            (Some(want), Some(have)) if !args.force && want == have => (),
             (Some(want), _) => {
-                tag.set_artist(want.as_str());
+                tag.set_album_artist(want.as_str());
+                must_update = true;
+            }
+            _ => (),
+        }
+
+        match (&args.artist, tag.album_artist()) {
+            (Some(want), Some(have)) if !args.force && want == have => (),
+            (Some(want), _) => {
                 tag.set_album_artist(want.as_str());
                 must_update = true;
             }
@@ -184,7 +196,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
 
         match (&args.album, tag.album()) {
-            (Some(want), Some(have)) if want == have => (),
+            (Some(want), Some(have)) if !args.force && want == have => (),
             (Some(want), _) => {
                 tag.set_album(want.as_str());
                 must_update = true;
@@ -193,7 +205,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
 
         match (&args.genre, tag.genre()) {
-            (Some(want), Some(have)) if want == have => (),
+            (Some(want), Some(have)) if !args.force && want == have => (),
             (Some(want), _) => {
                 tag.set_genre(want.as_str());
                 must_update = true;
@@ -221,7 +233,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         };
 
         match (some_want_track, tag.track()) {
-            (Some(want), Some(have)) if want == have => (),
+            (Some(want), Some(have)) if !args.force && want == have => (),
             (Some(want), _) => {
                 tag.set_track(want);
                 must_update = true;
@@ -244,7 +256,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         };
 
         match (some_want_title, tag.title()) {
-            (Some(want), Some(have)) if want.as_str() == have => (),
+            (Some(want), Some(have)) if !args.force && want.as_str() == have => (),
             (Some(want), _) => {
                 tag.set_title(want.as_str());
                 must_update = true;
@@ -253,7 +265,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
 
         if let Some(want) = &some_want_picture {
-            if !tag.pictures().any(|tp| want == tp) {
+            if args.force || !tag.pictures().any(|tp| want == tp) {
                 tag.remove_all_pictures();
                 tag.add_frame(want.clone());
                 must_update = true
