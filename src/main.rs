@@ -182,19 +182,11 @@ fn main() -> Result<(), Box<dyn Error>> {
                         extract_to, err
                     ))),
                 },
-                None => Err(Box::<dyn Error>::from(format!(
-                    "no image found in '{}'",
-                    file
-                ))),
+                None => Err(Box::<dyn Error>::from(format!("no image found in '{}'", file))),
             };
         }
 
-        if args
-            .clear_id
-            .iter()
-            .map(|id| tag.remove(id))
-            .any(|p| p.len() != 0)
-        {
+        if args.clear_id.iter().map(|id| tag.remove(id)).any(|p| p.len() != 0) {
             must_update = true;
         }
 
@@ -370,10 +362,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         });
     }
 
-    println!(
-        "{}",
-        Table::new(table).with(Style::modern_rounded()).to_string()
-    );
+    println!("{}", Table::new(table).with(Style::modern_rounded()).to_string());
 
     Ok(())
 }
