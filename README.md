@@ -28,5 +28,5 @@ install ./target/release/takis /usr/local/bin
 takis --extract-cover cover.jpg file.mp3
 
 # parse files in the format "05 - struggling under words of grief.mp3" (or similar), clear existing tag, extract track number and song title, set album, year, cover and rename files to "05 - Struggling Under Words Of Grief.mp3"
-id3v2-ng --track-regex '.*?(?P<track>\d+).*' --title-regex '.*?\d+(\s\-|\.)?\s(?P<title>.*)\.mp3' --genre 'Metalcore' --artist 'Shot For My Lover' --album 'The Toxin' --year 2005 --cover cover.jpg --clear --rename ./*.mp3
+takis --track-regex '.*?(?P<track>\d+).*' --title-regex '.*?\d+(\s\-|\.)?\s(?P<title>.*)\.mp3' --genre 'Metalcore' --artist 'Shot For My Lover' --album 'The Toxin' --year 2005 --cover cover.jpg --clear --rename *.mp3
 ```
