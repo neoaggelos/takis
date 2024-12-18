@@ -24,7 +24,7 @@ pub fn format_to_title(a: &str) -> String {
         };
     }
 
-    let mut b = String::new();
+    let mut b = String::with_capacity(a.len());
     a.chars().for_each(|ch| {
         b.push_str(next_chars(ch, b.chars().last()).as_str());
     });
