@@ -315,7 +315,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             cover: tag
                 .pictures()
                 .next()
-                .map(|p| format!("<{} bytes>", p.data.len()))
+                .map(|p| format!("<{} ({} bytes)>", p.mime_type, p.data.len()))
                 .unwrap_or_default(),
             other: tag
                 .frames()
