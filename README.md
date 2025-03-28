@@ -40,49 +40,26 @@ $ takis --clear-id PRIV *.mp3
 When no arguments are set, takis simply prints the ID3 tags in a table format
 
 ```
-$ takis *.mp3
-╭───────┬────────────────────────────┬────────┬───────────────┬──────┬───────────────┬──────────┬─────────────────────────────────────┬───────╮
-│ track │ title                      │ artist │ album         │ year │ cover         │ genre    │ file                                │ other │
-├───────┼────────────────────────────┼────────┼───────────────┼──────┼───────────────┼──────────┼─────────────────────────────────────┼───────┤
-│ 1     │ Waiting On A Twist Of Fate │ Sum 41 │ Heaven X Hell │ 2024 │ <53890 bytes> │ Punk Pop │ 01 - Waiting On A Twist Of Fate.mp3 │ []    │
-├───────┼────────────────────────────┼────────┼───────────────┼──────┼───────────────┼──────────┼─────────────────────────────────────┼───────┤
-│ 2     │ Landmines                  │ Sum 41 │ Heaven X Hell │ 2024 │ <53890 bytes> │ Punk Pop │ 02 - Landmines.mp3                  │ []    │
-├───────┼────────────────────────────┼────────┼───────────────┼──────┼───────────────┼──────────┼─────────────────────────────────────┼───────┤
-│ 3     │ I Can't Wait               │ Sum 41 │ Heaven X Hell │ 2024 │ <53890 bytes> │ Punk Pop │ 03 - I Can't Wait.mp3               │ []    │
-├───────┼────────────────────────────┼────────┼───────────────┼──────┼───────────────┼──────────┼─────────────────────────────────────┼───────┤
-│ 4     │ Time Won't Wait            │ Sum 41 │ Heaven X Hell │ 2024 │ <53890 bytes> │ Punk Pop │ 04 - Time Won't Wait.mp3            │ []    │
-├───────┼────────────────────────────┼────────┼───────────────┼──────┼───────────────┼──────────┼─────────────────────────────────────┼───────┤
-│ 5     │ Future Primitive           │ Sum 41 │ Heaven X Hell │ 2024 │ <53890 bytes> │ Punk Pop │ 05 - Future Primitive.mp3           │ []    │
-├───────┼────────────────────────────┼────────┼───────────────┼──────┼───────────────┼──────────┼─────────────────────────────────────┼───────┤
-│ 6     │ Dopamine                   │ Sum 41 │ Heaven X Hell │ 2024 │ <53890 bytes> │ Punk Pop │ 06 - Dopamine.mp3                   │ []    │
-├───────┼────────────────────────────┼────────┼───────────────┼──────┼───────────────┼──────────┼─────────────────────────────────────┼───────┤
-│ 7     │ Not Quite Myself           │ Sum 41 │ Heaven X Hell │ 2024 │ <53890 bytes> │ Punk Pop │ 07 - Not Quite Myself.mp3           │ []    │
-├───────┼────────────────────────────┼────────┼───────────────┼──────┼───────────────┼──────────┼─────────────────────────────────────┼───────┤
-│ 8     │ Bad Mistake                │ Sum 41 │ Heaven X Hell │ 2024 │ <53890 bytes> │ Punk Pop │ 08 - Bad Mistake.mp3                │ []    │
-├───────┼────────────────────────────┼────────┼───────────────┼──────┼───────────────┼──────────┼─────────────────────────────────────┼───────┤
-│ 9     │ Johnny Libertine           │ Sum 41 │ Heaven X Hell │ 2024 │ <53890 bytes> │ Punk Pop │ 09 - Johnny Libertine.mp3           │ []    │
-├───────┼────────────────────────────┼────────┼───────────────┼──────┼───────────────┼──────────┼─────────────────────────────────────┼───────┤
-│ 10    │ Radio Silence              │ Sum 41 │ Heaven X Hell │ 2024 │ <53890 bytes> │ Punk Pop │ 10 - Radio Silence.mp3              │ []    │
-├───────┼────────────────────────────┼────────┼───────────────┼──────┼───────────────┼──────────┼─────────────────────────────────────┼───────┤
-│ 11    │ Preparasi A Salire         │ Sum 41 │ Heaven X Hell │ 2024 │ <53890 bytes> │ Punk Pop │ 11 - Preparasi A Salire.mp3         │ []    │
-├───────┼────────────────────────────┼────────┼───────────────┼──────┼───────────────┼──────────┼─────────────────────────────────────┼───────┤
-│ 12    │ Rise Up                    │ Sum 41 │ Heaven X Hell │ 2024 │ <53890 bytes> │ Punk Pop │ 12 - Rise Up.mp3                    │ []    │
-├───────┼────────────────────────────┼────────┼───────────────┼──────┼───────────────┼──────────┼─────────────────────────────────────┼───────┤
-│ 13    │ Stranger In These Times    │ Sum 41 │ Heaven X Hell │ 2024 │ <53890 bytes> │ Punk Pop │ 13 - Stranger In These Times.mp3    │ []    │
-├───────┼────────────────────────────┼────────┼───────────────┼──────┼───────────────┼──────────┼─────────────────────────────────────┼───────┤
-│ 14    │ I Don't Need Anyone        │ Sum 41 │ Heaven X Hell │ 2024 │ <53890 bytes> │ Punk Pop │ 14 - I Don't Need Anyone.mp3        │ []    │
-├───────┼────────────────────────────┼────────┼───────────────┼──────┼───────────────┼──────────┼─────────────────────────────────────┼───────┤
-│ 15    │ Over The Edge              │ Sum 41 │ Heaven X Hell │ 2024 │ <53890 bytes> │ Punk Pop │ 15 - Over The Edge.mp3              │ []    │
-├───────┼────────────────────────────┼────────┼───────────────┼──────┼───────────────┼──────────┼─────────────────────────────────────┼───────┤
-│ 16    │ House Of Liars             │ Sum 41 │ Heaven X Hell │ 2024 │ <53890 bytes> │ Punk Pop │ 16 - House Of Liars.mp3             │ []    │
-├───────┼────────────────────────────┼────────┼───────────────┼──────┼───────────────┼──────────┼─────────────────────────────────────┼───────┤
-│ 17    │ You Wanted War             │ Sum 41 │ Heaven X Hell │ 2024 │ <53890 bytes> │ Punk Pop │ 17 - You Wanted War.mp3             │ []    │
-├───────┼────────────────────────────┼────────┼───────────────┼──────┼───────────────┼──────────┼─────────────────────────────────────┼───────┤
-│ 18    │ Paint It Black             │ Sum 41 │ Heaven X Hell │ 2024 │ <53890 bytes> │ Punk Pop │ 18 - Paint It Black.mp3             │ []    │
-├───────┼────────────────────────────┼────────┼───────────────┼──────┼───────────────┼──────────┼─────────────────────────────────────┼───────┤
-│ 19    │ It's All Me                │ Sum 41 │ Heaven X Hell │ 2024 │ <53890 bytes> │ Punk Pop │ 19 - It's All Me.mp3                │ []    │
-├───────┼────────────────────────────┼────────┼───────────────┼──────┼───────────────┼──────────┼─────────────────────────────────────┼───────┤
-│ 20    │ How The End Begins         │ Sum 41 │ Heaven X Hell │ 2024 │ <53890 bytes> │ Punk Pop │ 20 - How The End Begins.mp3         │ []    │
-╰───────┴────────────────────────────┴────────┴───────────────┴──────┴───────────────┴──────────┴─────────────────────────────────────┴───────╯
-
+$ takis ./*.mp3
+ TRACK  TITLE                       ARTIST  ALBUM          YEAR  COVER                       GENRE     FILE                                   OTHER
+ 1      Waiting On A Twist Of Fate  Sum 41  Heaven X Hell  2024  <image/jpeg (53890 bytes)>  Punk Pop  ./01 - Waiting On A Twist Of Fate.mp3  []
+ 2      Landmines                   Sum 41  Heaven X Hell  2024  <image/jpeg (53890 bytes)>  Punk Pop  ./02 - Landmines.mp3                   []
+ 3      I Can't Wait                Sum 41  Heaven X Hell  2024  <image/jpeg (53890 bytes)>  Punk Pop  ./03 - I Can't Wait.mp3                []
+ 4      Time Won't Wait             Sum 41  Heaven X Hell  2024  <image/jpeg (53890 bytes)>  Punk Pop  ./04 - Time Won't Wait.mp3             []
+ 5      Future Primitive            Sum 41  Heaven X Hell  2024  <image/jpeg (53890 bytes)>  Punk Pop  ./05 - Future Primitive.mp3            []
+ 6      Dopamine                    Sum 41  Heaven X Hell  2024  <image/jpeg (53890 bytes)>  Punk Pop  ./06 - Dopamine.mp3                    []
+ 7      Not Quite Myself            Sum 41  Heaven X Hell  2024  <image/jpeg (53890 bytes)>  Punk Pop  ./07 - Not Quite Myself.mp3            []
+ 8      Bad Mistake                 Sum 41  Heaven X Hell  2024  <image/jpeg (53890 bytes)>  Punk Pop  ./08 - Bad Mistake.mp3                 []
+ 9      Johnny Libertine            Sum 41  Heaven X Hell  2024  <image/jpeg (53890 bytes)>  Punk Pop  ./09 - Johnny Libertine.mp3            []
+ 10     Radio Silence               Sum 41  Heaven X Hell  2024  <image/jpeg (53890 bytes)>  Punk Pop  ./10 - Radio Silence.mp3               []
+ 11     Preparasi A Salire          Sum 41  Heaven X Hell  2024  <image/jpeg (53890 bytes)>  Punk Pop  ./11 - Preparasi A Salire.mp3          []
+ 12     Rise Up                     Sum 41  Heaven X Hell  2024  <image/jpeg (53890 bytes)>  Punk Pop  ./12 - Rise Up.mp3                     []
+ 13     Stranger In These Times     Sum 41  Heaven X Hell  2024  <image/jpeg (53890 bytes)>  Punk Pop  ./13 - Stranger In These Times.mp3     []
+ 14     I Don't Need Anyone         Sum 41  Heaven X Hell  2024  <image/jpeg (53890 bytes)>  Punk Pop  ./14 - I Don't Need Anyone.mp3         []
+ 15     Over The Edge               Sum 41  Heaven X Hell  2024  <image/jpeg (53890 bytes)>  Punk Pop  ./15 - Over The Edge.mp3               []
+ 16     House Of Liars              Sum 41  Heaven X Hell  2024  <image/jpeg (53890 bytes)>  Punk Pop  ./16 - House Of Liars.mp3              []
+ 17     You Wanted War              Sum 41  Heaven X Hell  2024  <image/jpeg (53890 bytes)>  Punk Pop  ./17 - You Wanted War.mp3              []
+ 18     Paint It Black              Sum 41  Heaven X Hell  2024  <image/jpeg (53890 bytes)>  Punk Pop  ./18 - Paint It Black.mp3              []
+ 19     It's All Me                 Sum 41  Heaven X Hell  2024  <image/jpeg (53890 bytes)>  Punk Pop  ./19 - It's All Me.mp3                 []
+ 20     How The End Begins          Sum 41  Heaven X Hell  2024  <image/jpeg (53890 bytes)>  Punk Pop  ./20 - How The End Begins.mp3          []
 ```
