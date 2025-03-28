@@ -15,6 +15,7 @@ pub fn format_to_title(a: &str) -> String {
             'Ό' => 'Ο',
             'Ύ' => 'Υ',
             'Ώ' => 'Ω',
+            '’' => '\'',
             _ => ch,
         };
 
