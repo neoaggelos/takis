@@ -72,13 +72,14 @@ struct Cli {
     /// Rename file after applying tag
     #[arg(long, default_value_t = false)]
     rename: bool,
-    // TODO: use a template engine and add configurable rename format.
-    // /// Rename file format after applying tag
-    // #[arg(long, default_value_t = String::from("{track:02} - {title}.mp3"))]
-    // rename_format: String,
+
+    /// Output format
+    #[arg(long, default_value_t = false)]
+    pretty: bool,
 }
 
 #[derive(Tabled)]
+#[tabled(rename_all = "UPPERCASE")]
 struct SongTag {
     track: String,
     title: String,
@@ -334,7 +335,11 @@ fn main() -> Result<(), Box<dyn Error>> {
         });
     }
 
-    println!("{}", Table::new(table).with(Style::modern_rounded()).to_string());
+    if args.pretty {
+        println!("{}", Table::new(table).with(Style::modern_rounded()).to_string());
+    } else {
+        println!("{}", Table::new(table).with(Style::empty()).to_string());
+    }
 
     Ok(())
 }
